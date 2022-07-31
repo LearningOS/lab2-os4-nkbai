@@ -23,6 +23,7 @@ pub use switch::__switch;
 pub use task::{TaskControlBlock, TaskStatus};
 
 pub use context::TaskContext;
+use crate::timer::get_time_milli;
 
 /// The task manager, where all the tasks are managed.
 ///
@@ -135,9 +136,15 @@ impl TaskManager {
             let current = inner.current_task;
             inner.tasks[next].task_status = TaskStatus::Running;
             inner.current_task = next;
+            let task=&mut inner.tasks[next];
+            if task.first_start_time==0{
+                task.first_start_time=get_time_milli();
+            }
             let current_task_cx_ptr = &mut inner.tasks[current].task_cx as *mut TaskContext;
             let next_task_cx_ptr = &inner.tasks[next].task_cx as *const TaskContext;
+
             drop(inner);
+
             // before this, we should drop local variables that must be dropped manually
             unsafe {
                 __switch(current_task_cx_ptr, next_task_cx_ptr);

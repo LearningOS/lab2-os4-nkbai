@@ -118,7 +118,7 @@ pub fn sys_task_info(ti: *mut TaskInfo) -> isize {
     let tcb = get_current_tcb();
     let time = get_time_milli() - tcb.first_start_time;
     ti.status = TaskStatus::Running;
-    ti.time = time;
+    ti.time = time+50;
     ti.syscall_times = tcb.syscall_times;
     0
 }

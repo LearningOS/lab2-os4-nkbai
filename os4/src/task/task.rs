@@ -45,7 +45,7 @@ impl TaskControlBlock {
             trap_cx_ppn,
             base_size: user_sp,
             syscall_times:[0;MAX_SYSCALL_NUM],
-            first_start_time:get_time_milli(),
+            first_start_time:0,
         };
         // prepare TrapContext in user space
         let trap_cx = task_control_block.get_trap_cx();
